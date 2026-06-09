@@ -1,77 +1,176 @@
-# Yapay Zeka Destekli Gayrimenkul ve Risk Analizi (Antigravity Geo-Risk)
+# 🌍 Antigravity Geo-Risk Analyzer
 
-Bu proje, harita üzerinden seçilen herhangi bir konuma ait sismik (deprem), taşkın (sel) ve zemin risklerini analiz eden, yapay zeka destekli gayrimenkul değerlemesi ve aksiyon önerileri sunan modern bir **Web GIS (Coğrafi Bilgi Sistemleri)** uygulamasıdır.
+![Dashboard](assets/dashboard.png)
 
----
+![Risk Analysis](assets/analysis.png)
 
-## Proje Mimarisi ve Özellikleri
+![AI Report](assets/ai-report.png)
 
-Uygulama üç ana katmandan oluşmaktadır:
-1. **Veritabanı**: Coğrafi poligon, çizgi ve nokta verilerini saklamak, CBS mekansal sorguları (`ST_Distance`, `ST_Contains`) yapabilmek için **PostgreSQL + PostGIS**.
-2. **Backend (Python FastAPI)**: Port **8081** üzerinde çalışır. CBS verilerini işler, ağırlıklı risk skoru hesaplar, emlak değerleme motoru ve yapay zeka rapor oluşturucu içerir.
-3. **Frontend (React + Leaflet)**: Port **5174** üzerinde çalışır. Karanlık mod tasarımı, cam efekti (glassmorphism) ve interaktif harita katmanları barındırır. Harita üzerinde fay hatları kırmızı kesikli çizgilerle, sel taşkın havzaları ise mavi alanlarla görselleştirilmiştir.
+## 🚀 Overview
 
-### 🔌 Akıllı GIS Modu (Graceful Fallback)
-Eğer sisteminizde Docker veya PostgreSQL/PostGIS yüklü değilse, backend **otomatik olarak bellek içi coğrafi analiz motoruna (Simulated GIS Engine)** geçer. Bu modda `Shapely` ve `Haversine` kütüphaneleri kullanılarak İstanbul genelindeki demo fay hattı ve taşkın bölgesi verileri milisaniyeler içinde matematiksel mesafe hesaplamaları yapılır. **Uygulama veritabanı olmasa dahi tamamen çalışır durumdadır.**
+Antigravity Geo-Risk Analyzer is an AI-powered WebGIS platform that evaluates earthquake, flood, soil and environmental risks for real estate locations.
+
+The project combines modern GIS technologies, spatial databases and intelligent risk reporting to provide location-based analysis and decision support.
 
 ---
 
-## Kurulum ve Çalıştırma
+## ✨ Key Features
 
-### Yöntem 1: Docker Compose ile Çalıştırma (Önerilen)
-Tüm servisleri (PostGIS, Backend ve Frontend) tek bir komutla ayağa kaldırabilirsiniz. Bu yöntem PostGIS CBS veritabanını da aktif eder.
-
-1. Docker Daemon'ın çalıştığından emin olun.
-2. Projenin kök dizininde aşağıdaki komutu çalıştırın:
-   ```bash
-   docker-compose up --build
-   ```
-3. Tarayıcınızda [http://localhost:5174](http://localhost:5174) adresine gidin.
-
-*Not: Uygulama ilk kez açıldığında, İstanbul genelindeki fay hatları ve taşkın bölgeleri veritabanına otomatik olarak tohumlanır (seed).*
+* Interactive map-based risk analysis
+* Earthquake proximity assessment
+* Flood zone detection
+* Soil quality evaluation
+* Transportation accessibility scoring
+* Security and environmental analysis
+* AI-generated risk reports
+* Real estate valuation support
+* Spatial database analytics
+* Graceful fallback simulation mode
 
 ---
 
-### Yöntem 2: Yerel Olarak Çalıştırma (Simüle Mod)
-Docker kullanmadan, doğrudan bilgisayarınız üzerinde çalıştırmak isterseniz:
+## 🏗️ System Architecture
 
-#### 1. Backend'i Başlatma (Port 8081)
-```bash
-# Backend dizinine geçin
-cd backend
-
-# Sanal ortam oluşturun ve aktif edin (Opsiyonel)
-python -m venv venv
-venv\Scripts\activate  # Windows için
-
-# Bağımlılıkları yükleyin
-pip install -r requirements.txt
-
-# Sunucuyu başlatın
-python main.py
+```text
+Leaflet Map
+    ↓
+React Frontend
+    ↓
+FastAPI REST API
+    ↓
+Pydantic Validation
+    ↓
+SQLAlchemy / GeoAlchemy2
+    ↓
+PostgreSQL + PostGIS
+    ↓
+Spatial Analysis Engine
+    ↓
+AI Risk Engine
+    ↓
+AI Report Generator
+    ↓
+JSON Response
+    ↓
+React User Interface
 ```
-*Backend `http://localhost:8081` adresinde çalışacaktır. PostGIS bağlantısı kurulamayacağı için otomatik olarak Simüle GIS modunda başlayacaktır.*
-
-#### 2. Frontend'i Başlatma (Port 5174)
-```bash
-# Frontend dizinine geçin
-cd frontend
-
-# Bağımlılıkları yükleyin
-npm install
-
-# Uygulamayı başlatın
-npm run dev
-```
-*Frontend `http://localhost:5174` adresinde çalışmaya başlayacaktır.*
 
 ---
 
-## Nasıl Kullanılır?
+## 🛠️ Technology Stack
 
-1. Tarayıcınızdan **`http://localhost:5174`** adresini açın.
-2. Haritada İstanbul'da bir konuma tıklayın:
-   - **Deprem Riskini Test Etmek İçin**: Haritanın güneyindeki (Marmara Denizi kıyısındaki) kırmızı kesikli çizgilere yakın alanlara veya kuzeydeki fay segmentine yakın yerlere tıklayın. Faya yakınlaştıkça ve bina yaşı arttıkça riskin yükseldiğini gözlemleyin.
-   - **Sel Riskini Test Etmek İçin**: Haritada mavi renkle çizilmiş olan **Ayamama Deresi**, **Alibeyköy Deresi** veya **Riva Deresi** taşkın yataklarının içine tıklayın. Risk çubuklarındaki sel tehlikesinin tavan yaptığını göreceksiniz.
-   - **Zemin Karşılaştırması İçin**: Kuzeydeki ormanlık kayaç zemin (A/B Sınıfı) ile güneydeki killi/alüvyon zemin (E Sınıfı) bölgelerini tıklayarak zemin güvenliği puanlarının nasıl değiştiğini inceleyin.
-3. Sol taraftaki cam panelden **Bina Yaşı** ve **Gayrimenkul Türü** değerlerini değiştirip **"Parametreleri Güncelle"** butonuna basarak yapay zekanın emlak değer tahminini ve güvenlik tavsiyelerini dinamik olarak güncelleyin.
+### Frontend
+
+* React
+* Vite
+* Leaflet
+
+### Backend
+
+* FastAPI
+* Pydantic
+* SQLAlchemy
+* GeoAlchemy2
+
+### Database
+
+* PostgreSQL
+* PostGIS
+
+### GIS & Spatial Analytics
+
+* ST_Distance
+* ST_Contains
+* ST_Transform
+* KNN Search
+* GiST Index
+* R-Tree Indexing
+
+### Fallback GIS Engine
+
+* Shapely
+* Haversine
+
+### Infrastructure
+
+* Docker
+* Docker Compose
+
+---
+
+## 📊 Spatial Operations
+
+### ST_Distance
+
+Calculates distances between spatial geometries.
+
+### ST_Contains
+
+Determines whether a location exists inside a polygon such as a flood zone.
+
+### ST_Transform
+
+Converts coordinate systems between SRID 4326 and SRID 3857 for accurate metric calculations.
+
+### KNN Search
+
+Finds nearest spatial objects efficiently using GiST indexes.
+
+### GiST + R-Tree Indexing
+
+Accelerates spatial searches by organizing geometries using Minimum Bounding Rectangles (MBR).
+
+---
+
+## 🔌 Graceful Fallback Mode
+
+Unlike traditional GIS applications, the system continues operating even when PostgreSQL/PostGIS becomes unavailable.
+
+When a database connection cannot be established:
+
+* Shapely performs geometric calculations
+* Haversine calculates geodesic distances
+* Risk analysis continues without interruption
+
+This ensures uninterrupted service and prevents complete application failure.
+
+---
+
+## 🚀 Running with Docker
+
+```bash
+docker-compose up --build
+```
+
+Frontend:
+
+```text
+http://localhost:5174
+```
+
+Backend:
+
+```text
+http://localhost:8081
+```
+
+---
+
+## 📈 Future Improvements
+
+* Integration with AFAD earthquake datasets
+* Integration with Istanbul Metropolitan Municipality (IBB) GIS datasets
+* Nationwide coverage beyond Istanbul
+* Real-time GIS data ingestion
+* Machine learning based valuation models
+* Cloud deployment and scalability improvements
+
+---
+
+## 👨‍💻 Author
+
+**Ahmet Akdeniz**
+
+Computer Engineering Graduate
+
+FastAPI • React • PostgreSQL • PostGIS • GIS • Docker • Spatial Databases • AI-Assisted Analytics
