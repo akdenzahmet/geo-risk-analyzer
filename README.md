@@ -1,10 +1,16 @@
 # 🌍 Antigravity Geo-Risk Analyzer
 
-![Dashboard](assets/dashboard.png)
+![Dashboard](assets/Dashboard.png)
 
-![Risk Analysis](assets/analysis.png)
+![Risk Analysis](assets/Analysis.png)
 
-![AI Report](assets/ai-report.png)
+![Compare](assets/Compare.png)
+
+![AI Report1](assets/AIReport1.png)
+
+![AI Report2](assets/AIReport2.png)
+
+![AI Report3](assets/AIReport3.png)
 
 ## 🚀 Overview
 
