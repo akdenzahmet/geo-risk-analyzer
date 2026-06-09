@@ -4,7 +4,14 @@
 
 ![Risk Analysis](assets/analysis.png)
 
-![AI Report](assets/ai-report.png)
+![Compare](assets/Compare.png)
+
+![AI Report1](assets/AIReport1.png)
+
+![AI Report2](assets/AIReport2.png)
+
+![AI Report3](assets/AIReport3.png)
+
 
 ## 🚀 Overview
 
