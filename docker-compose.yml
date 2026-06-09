@@ -1,0 +1,66 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgis/postgis:15-3.3
+    container_name: antigravity-postgis
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres123
+      - POSTGRES_DB=geodb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d geodb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - geo-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: antigravity-backend
+    ports:
+      - "8081:8081"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres123
+      - POSTGRES_SERVER=db
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=geodb
+      - DEBUG=True
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - geo-network
+
+  frontend:
+    image: node:22-slim
+    container_name: antigravity-frontend
+    working_dir: /app
+    ports:
+      - "5174:5174"
+    volumes:
+      - ./frontend:/app
+      # Container içindeki node_modules'un local makinadakiyle çakışmaması için volume maskelemesi
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:8081/api
+    command: sh -c "npm install && npm run dev"
+    depends_on:
+      - backend
+    networks:
+      - geo-network
+
+volumes:
+  postgres_data:
+
+networks:
+  geo-network:
+    driver: bridge

@@ -1,0 +1,468 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --bg-primary: #0b0f19;
+  --bg-secondary: #131a2e;
+  --bg-tertiary: #1b253f;
+  
+  --accent-blue: #3b82f6;
+  --accent-cyan: #06b6d4;
+  --accent-indigo: #6366f1;
+  
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --info: #0ea5e9;
+  
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  
+  --glass-bg: rgba(15, 23, 42, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.07);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+  
+  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Sıfırlama ve Temel Ayarlar */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body, html, #root {
+  width: 100%;
+  height: 100%;
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  overflow: hidden;
+}
+
+/* Özelleştirilmiş Kaydırma Çubuğu */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bg-tertiary);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-blue);
+}
+
+/* Cam Efektli Panel Yapısı (Glassmorphism) */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 16px;
+  transition: var(--transition-smooth);
+}
+
+.glass-panel:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Harita Karartma ve Stil Filtresi */
+.dark-theme-map {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+/* Harita katmanını koyu moda çeviren filtre (Premium WebGIS Görünümü) */
+.dark-theme-map .leaflet-tile-container {
+  filter: invert(100%) hue-rotate(180deg) brightness(85%) contrast(90%);
+}
+
+.dark-theme-map .leaflet-container {
+  background: #0f172a !important;
+}
+
+/* Leaflet Kendi Arayüz Elemanlarını Gizle/Düzenle */
+.leaflet-control-zoom {
+  border: 1px solid var(--glass-border) !important;
+  box-shadow: var(--glass-shadow) !important;
+  border-radius: 8px !important;
+  overflow: hidden;
+}
+
+.leaflet-control-zoom-in, .leaflet-control-zoom-out {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  border-bottom: 1px solid var(--glass-border) !important;
+}
+
+.leaflet-control-zoom-in:hover, .leaflet-control-zoom-out:hover {
+  background-color: var(--bg-tertiary) !important;
+  color: var(--accent-cyan) !important;
+}
+
+.leaflet-popup-content-wrapper {
+  background: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 12px !important;
+  box-shadow: var(--glass-shadow) !important;
+}
+
+.leaflet-popup-tip {
+  background: var(--bg-secondary) !important;
+}
+
+/* Risk Seviyeleri için Badge Stilleri */
+.badge-risk {
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.badge-risk.safe {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: var(--success);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.15);
+}
+
+.badge-risk.low {
+  background-color: rgba(14, 165, 233, 0.15);
+  color: var(--info);
+  border: 1px solid rgba(14, 165, 233, 0.3);
+  box-shadow: 0 0 12px rgba(14, 165, 233, 0.15);
+}
+
+.badge-risk.medium {
+  background-color: rgba(245, 158, 11, 0.15);
+  color: var(--warning);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.15);
+}
+
+.badge-risk.high {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: var(--danger);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.15);
+}
+
+/* Düğme ve İnteraktif Elemanlar */
+.btn-premium {
+  background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-indigo) 100%);
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: var(--transition-smooth);
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+}
+
+.btn-premium:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+  filter: brightness(1.1);
+}
+
+.btn-premium:active {
+  transform: translateY(0);
+}
+
+.btn-premium:disabled {
+  background: var(--text-muted);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  opacity: 0.6;
+}
+
+/* Giriş Elemanları */
+.input-premium {
+  background-color: rgba(15, 23, 42, 0.5);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  width: 100%;
+  outline: none;
+  transition: var(--transition-smooth);
+}
+
+.input-premium:focus {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.2);
+  background-color: rgba(15, 23, 42, 0.8);
+}
+
+/* Grid Kartları */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.info-card {
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-card-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.info-card-value {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Rapor Akordeon Elemanları */
+.report-section {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 12px 0;
+}
+
+.report-section:last-child {
+  border-bottom: none;
+}
+
+.report-section-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Yüklenme ve Boş Durum Animasyonları */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes spinner {
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  border-top-color: var(--accent-cyan);
+  animation: spinner 0.8s linear infinite;
+}
+
+/* Parlayan Harita İşaretçileri Animasyonu (Premium WebGIS) */
+@keyframes markerPulse {
+  0% { transform: scale(0.5); opacity: 0.8; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+.marker-pulse {
+  animation: markerPulse 1.8s infinite ease-out;
+}
+
+/* Premium Koyu Tema Harita Tooltip Stili */
+.leaflet-tooltip.premium-tooltip {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 8px !important;
+  box-shadow: var(--glass-shadow) !important;
+  font-family: var(--font-sans) !important;
+  font-size: 0.85rem !important;
+  padding: 6px 12px !important;
+  border-left: 3px solid var(--accent-cyan) !important; /* Premium sol mavi şerit */
+}
+
+.leaflet-tooltip-left.premium-tooltip::before {
+  border-left-color: var(--bg-secondary) !important;
+}
+.leaflet-tooltip-right.premium-tooltip::before {
+  border-right-color: var(--bg-secondary) !important;
+}
+.leaflet-tooltip-top.premium-tooltip::before {
+  border-top-color: var(--bg-secondary) !important;
+}
+.leaflet-tooltip-bottom.premium-tooltip::before {
+  border-bottom-color: var(--bg-secondary) !important;
+}
+
+/* Tarayıcıların interaktif SVG/Path nesnelerine odaklandığında çizdiği çirkin kutu sınırını kaldırma */
+.leaflet-interactive:focus,
+path.leaflet-interactive:focus,
+.leaflet-container *:focus,
+.leaflet-container :focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* --- MOBİL UYUMLULUK (RESPONSIVE DESIGN) --- */
+@media (max-width: 768px) {
+  /* Harita tüm ekranı kaplasın */
+  .dark-theme-map {
+    width: 100% !important;
+    height: 100% !important;
+    position: absolute !important;
+    z-index: 1 !important;
+  }
+
+  /* Sol panel mobilde Bottom Sheet / Slide-up Drawer şeklinde davranır */
+  .glass-panel.sidebar-responsive {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    z-index: 999 !important;
+    border-radius: 0px !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 16px 20px 30px 20px !important;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); /* Sürükleme akıcılığı için !important kaldırıldı */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden !important; /* Taşma iç kısım olan contentArea ile kontrol ediliyor */
+  }
+
+  /* Açık durumdayken yukarı kayar */
+  .glass-panel.sidebar-responsive.open {
+    transform: translateY(0);
+  }
+
+  /* Kapalıyken aşağı gizlenir */
+  .glass-panel.sidebar-responsive.closed {
+    transform: translateY(100%);
+  }
+
+  /* Mobilde sürükleme kulbu (Drag Handle) */
+  .mobile-drag-handle {
+    display: block !important;
+    width: 45px;
+    height: 5px;
+    background-color: rgba(255, 255, 255, 0.25);
+    border-radius: 999px;
+    margin: 10px auto 4px auto;
+    cursor: pointer;
+    flex-shrink: 0;
+    /* Genişletilmiş dokunma alanı (Touch Target) */
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    background-clip: padding-box;
+  }
+
+  /* Mobilde kapatma butonu */
+  .mobile-close-btn {
+    display: flex !important;
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-primary);
+    z-index: 1000;
+  }
+}
+
+/* Masaüstünde gizlenecek mobil elemanlar */
+.mobile-drag-handle,
+.mobile-close-btn {
+  display: none;
+}
+
+/* Masaüstünde mobil paneli açma butonunu gizle */
+.mobile-toggle-btn {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .mobile-toggle-btn {
+    display: flex !important;
+  }
+}
+
+/* Developer Console Styles */
+.btn-devconsole {
+  background-color: rgba(15, 23, 42, 0.45) !important;
+  border: 1px solid rgba(6, 182, 212, 0.3) !important;
+  color: var(--text-primary) !important;
+  border-radius: 10px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  transition: var(--transition-smooth);
+}
+
+.btn-devconsole:hover {
+  border-color: var(--accent-cyan) !important;
+  background-color: rgba(6, 182, 212, 0.08) !important;
+  box-shadow: 0 0 12px rgba(6, 182, 212, 0.2);
+  transform: translateY(-1px);
+}
+
+.modal-close-btn-hover {
+  transition: var(--transition-smooth);
+}
+
+.modal-close-btn-hover:hover {
+  background: rgba(239, 68, 68, 0.1) !important;
+  color: var(--danger) !important;
+}
