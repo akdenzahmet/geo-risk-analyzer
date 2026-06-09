@@ -1,8 +1,8 @@
 # 🌍 Antigravity Geo-Risk Analyzer
 
-![Dashboard](assets/dashboard.png)
+![Dashboard](assets/Dashboard.png)
 
-![Risk Analysis](assets/analysis.png)
+![Risk Analysis](assets/Analysis.png)
 
 ![Compare](assets/Compare.png)
 
