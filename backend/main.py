@@ -2,6 +2,7 @@ import uvicorn
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 import logging
 
 from backend.config import settings
@@ -39,6 +40,13 @@ def startup_event():
     if not IS_SIMULATED_MODE and engine is not None:
         try:
             logger.info("PostGIS veritabanı tabloları oluşturuluyor...")
+            try:
+                logger.info("PostGIS extension aktif ediliyor...")
+                with engine.connect() as conn:
+                    conn.execute(text("CREATE EXTENSION IF NOT EXISTS postgis;"))
+                    conn.commit()
+            except Exception as e:
+                logger.warning(f"PostGIS extension oluşturulamadı: {e}")
             Base.metadata.create_all(bind=engine)
             
             # Verileri tohumlama
