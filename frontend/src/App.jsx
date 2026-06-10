@@ -4,7 +4,8 @@ import MapView from "./components/MapView";
 import Sidebar from "./components/Sidebar";
 import { isPointInIstanbul } from "./constants/istanbulBounds";
 
-const API_BASE_URL = `http://${window.location.hostname}:8081/api`;
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || `http://${window.location.hostname}:8081/api`;
 
 // Uygulama çalışma zamanı (runtime) hatalarını ekranda göstermek için Error Boundary
 class ErrorBoundary extends React.Component {
